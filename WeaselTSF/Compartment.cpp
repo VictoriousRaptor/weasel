@@ -168,8 +168,7 @@ HRESULT WeaselTSF::_SetKeyboardOpen(BOOL fOpen) {
                                  &pCompartment) == S_OK) {
       VARIANT var;
       var.vt = VT_I4;
-      // never close keyboard
-      var.lVal = TRUE;
+      var.lVal = fOpen;
       hr = pCompartment->SetValue(_tfClientId, &var);
     }
   }
@@ -242,16 +241,8 @@ void WeaselTSF::_UninitCompartment() {
 }
 
 HRESULT WeaselTSF::_HandleCompartment(REFGUID guidCompartment) {
-  if (IsEqualGUID(guidCompartment, GUID_COMPARTMENT_KEYBOARD_OPENCLOSE)) {
-    BOOL isOpen = _IsKeyboardOpen();
-    // clear composition when close keyboard
-    if (!isOpen && _pEditSessionContext) {
-      m_client.ClearComposition();
-      _EndComposition(_pEditSessionContext, true);
-    }
-    _EnableLanguageBar(isOpen);
-  } else if (IsEqualGUID(guidCompartment,
-                         GUID_COMPARTMENT_KEYBOARD_INPUTMODE_CONVERSION)) {
+  if (IsEqualGUID(guidCompartment,
+                  GUID_COMPARTMENT_KEYBOARD_INPUTMODE_CONVERSION)) {
     BOOL isOpen = _IsKeyboardOpen();
     if (isOpen) {
       weasel::ResponseParser parser(NULL, NULL, &_status, NULL,
