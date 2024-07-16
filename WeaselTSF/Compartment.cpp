@@ -168,7 +168,8 @@ HRESULT WeaselTSF::_SetKeyboardOpen(BOOL fOpen) {
                                  &pCompartment) == S_OK) {
       VARIANT var;
       var.vt = VT_I4;
-      var.lVal = fOpen;
+      // never close keyboard
+      var.lVal = TRUE;
       hr = pCompartment->SetValue(_tfClientId, &var);
     }
   }
