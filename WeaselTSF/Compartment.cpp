@@ -243,12 +243,12 @@ void WeaselTSF::_UninitCompartment() {
 HRESULT WeaselTSF::_HandleCompartment(REFGUID guidCompartment) {
   if (IsEqualGUID(guidCompartment, GUID_COMPARTMENT_KEYBOARD_OPENCLOSE)) {
     BOOL isOpen = _IsKeyboardOpen();
-    // clear composition when close keyboard
-    if (!isOpen && _pEditSessionContext) {
-      m_client.ClearComposition();
-      _EndComposition(_pEditSessionContext, true);
+    if (isOpen) {
+      weasel::ResponseParser parser(NULL, NULL, &_status, NULL,
+                                    &_cand->style());
+      bool ok = m_client.GetResponseData(std::ref(parser));
+      _UpdateLanguageBar(_status);
     }
-    _EnableLanguageBar(isOpen);
   } else if (IsEqualGUID(guidCompartment,
                          GUID_COMPARTMENT_KEYBOARD_INPUTMODE_CONVERSION)) {
     BOOL isOpen = _IsKeyboardOpen();
