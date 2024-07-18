@@ -215,16 +215,10 @@ BOOL WeaselTSF::_InitCompartment() {
   using namespace std::placeholders;
 
   auto callback = std::bind(&WeaselTSF::_HandleCompartment, this, _1);
-  _pKeyboardCompartmentSink = new CCompartmentEventSink(callback);
-  if (!_pKeyboardCompartmentSink)
-    return FALSE;
-  DWORD hr = _pKeyboardCompartmentSink->_Advise(
-      (IUnknown*)_pThreadMgr, GUID_COMPARTMENT_KEYBOARD_OPENCLOSE);
-
   _pConvertionCompartmentSink = new CCompartmentEventSink(callback);
   if (!_pConvertionCompartmentSink)
     return FALSE;
-  hr = _pConvertionCompartmentSink->_Advise(
+  DWORD hr = _pConvertionCompartmentSink->_Advise(
       (IUnknown*)_pThreadMgr, GUID_COMPARTMENT_KEYBOARD_INPUTMODE_CONVERSION);
   return SUCCEEDED(hr);
 }
